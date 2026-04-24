@@ -55,7 +55,7 @@ body{
 }
 
 /* ── PETALOS ── */
-#petals{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+#petals{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
 .petal{
   position:absolute;top:-30px;
   border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
@@ -399,13 +399,13 @@ footer .fd{
 }
 #env-image{
   position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center;
-  z-index:2;transform:scale(1.18);
+  object-fit:contain;object-position:center;
+  z-index:2;
 }
 #env-video{
   position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center;
-  z-index:3;opacity:0;transform:scale(1.18);
+  object-fit:contain;object-position:center;
+  z-index:3;opacity:0;
 }
 #env-flash{
   position:fixed;inset:0;background:#9B1C1C;
@@ -816,7 +816,6 @@ gsap.registerPlugin(ScrollTrigger);
     .to(envScreen, { opacity:1, duration:1.2, ease:'power2.out', delay:0.3 })
     .to(hint,      { opacity:1, duration:0.9, ease:'power2.out' }, '-=0.5');
 
-  gsap.set(envImage, { scale:1 });
 
   var flashStarted    = false;
   var invitationReady = false;
