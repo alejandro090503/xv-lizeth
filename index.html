@@ -69,7 +69,7 @@ body{
 }
 .hero-bg{
   position:absolute;inset:0;
-  background:url('./lizeth.jpg') center top/cover no-repeat;
+  background:url('./hero.png') center top/cover no-repeat;
 }
 .hero-veil{
   position:absolute;inset:0;
@@ -412,24 +412,19 @@ footer .fd{
   z-index:9999;opacity:0;pointer-events:none;
 }
 .envelope-hint{
-  position:absolute;bottom:52px;left:50%;
+  position:absolute;bottom:48px;left:50%;
   transform:translateX(-50%);
   font-family:'Cormorant Garamond',serif;
   font-size:11px;letter-spacing:5px;text-transform:uppercase;
-  color:rgba(255,255,255,0.75);opacity:0;cursor:pointer;
+  color:#fff;opacity:0;cursor:pointer;
   white-space:nowrap;z-index:10;
-  text-shadow:0 1px 4px rgba(0,0,0,0.4);
+  background:rgba(0,0,0,0.45);
+  border:1px solid rgba(255,255,255,0.45);
+  padding:10px 22px;border-radius:30px;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
 }
-.envelope-hint::after{
-  content:'';display:block;width:32px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
-  margin:10px auto 0;
-  animation:hintPulse 2.2s ease-in-out infinite;
-}
-@keyframes hintPulse{
-  0%,100%{opacity:.4;width:32px;}
-  50%{opacity:1;width:54px;}
-}
+.envelope-hint::after{content:none;}
 #loader{display:none;}
 </style>
 </head>
@@ -677,9 +672,11 @@ footer .fd{
   <!-- CROSSFADE GALERIA -->
   <section id="sgal">
     <div class="cf-frame">
-      <img class="cf-img" id="cfImg1" src="./foto1.jpg" alt="Lizeth">
-      <img class="cf-img" id="cfImg2" src="./foto2.jpg" alt="Lizeth">
-      <img class="cf-img" id="cfImg3" src="./foto3.jpg" alt="Lizeth">
+      <img class="cf-img" id="cfImg1" src="./foto1.png" alt="Lizeth">
+      <img class="cf-img" id="cfImg2" src="./foto2.png" alt="Lizeth">
+      <img class="cf-img" id="cfImg3" src="./foto3.png" alt="Lizeth">
+      <img class="cf-img" id="cfImg4" src="./foto4.png" alt="Lizeth">
+      <img class="cf-img" id="cfImg5" src="./foto5.png" alt="Lizeth">
       <div class="cf-fade-top"></div>
       <div class="cf-fade-bot"></div>
     </div>
@@ -819,10 +816,7 @@ gsap.registerPlugin(ScrollTrigger);
     .to(envScreen, { opacity:1, duration:1.2, ease:'power2.out', delay:0.3 })
     .to(hint,      { opacity:1, duration:0.9, ease:'power2.out' }, '-=0.5');
 
-  gsap.to(envImage, {
-    scale: 1.20, duration:2.2, ease:'sine.inOut',
-    repeat:-1, yoyo:true, delay:1.5
-  });
+  gsap.set(envImage, { scale:1 });
 
   var flashStarted    = false;
   var invitationReady = false;
@@ -950,7 +944,10 @@ function initDressCode(){
 }
 
 function initCrossfade(){
-  gsap.set('#cfImg2,#cfImg3',{opacity:0});
+  gsap.set('#cfImg2,#cfImg3,#cfImg4,#cfImg5',{opacity:0});
+  const breaks=[0.10,0.32,0.54,0.76];
+  const T=0.14;
+  const cl=gsap.utils.clamp;
   ScrollTrigger.create({
     trigger:'#sgal',
     start:'top top',
@@ -958,12 +955,12 @@ function initCrossfade(){
     scrub:1,
     onUpdate(self){
       const p=self.progress;
-      const i1=1-gsap.utils.clamp(0,1,(p-0.25)/0.2);
-      const i2=Math.min(gsap.utils.clamp(0,1,(p-0.25)/0.2),1-gsap.utils.clamp(0,1,(p-0.65)/0.2));
-      const i3=gsap.utils.clamp(0,1,(p-0.65)/0.2);
-      gsap.set('#cfImg1',{opacity:i1});
-      gsap.set('#cfImg2',{opacity:i2});
-      gsap.set('#cfImg3',{opacity:i3});
+      const f=s=>cl(0,1,(p-s)/T);
+      gsap.set('#cfImg1',{opacity:1-f(breaks[0])});
+      gsap.set('#cfImg2',{opacity:Math.min(f(breaks[0]),1-f(breaks[1]))});
+      gsap.set('#cfImg3',{opacity:Math.min(f(breaks[1]),1-f(breaks[2]))});
+      gsap.set('#cfImg4',{opacity:Math.min(f(breaks[2]),1-f(breaks[3]))});
+      gsap.set('#cfImg5',{opacity:f(breaks[3])});
     }
   });
 }
